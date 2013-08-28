@@ -10,6 +10,14 @@ function test(fn) {
       html: testFile,
       scripts: [__dirname + "/files/jquery.js", __dirname + "/files/sizzle.js"],
       done: function(e, window) {
+
+        // Cleanup the scripts injected by jsdom
+        var scripts = window.document.getElementsByClassName('jsdom');
+        var current = scripts.length;
+        while(current--) {
+          scripts[current].parentNode.removeChild(scripts[current]);
+        }
+
         var Sizzle = window.Sizzle;
         var document = window.document;
 
@@ -71,7 +79,7 @@ function test(fn) {
   };
 }
 
-exports['element'] = test(function (window) { with (window) {
+exports['element'] = test(function (window) { with (window) { (function () {
   expect( 37 );
 
   equal( Sizzle("").length, 0, "Empty selector returns an empty array" );
@@ -151,7 +159,7 @@ exports['element'] = test(function (window) { with (window) {
   // Real use case would be using .watch in browsers with window.watch (see Issue #157)
   q("qunit-fixture")[0].appendChild( document.createElement("toString") ).id = "toString";
   t( "Element name matches Object.prototype property", "toString#toString", ["toString"] );
-}});
+}())}});
 
 exports['broken'] = test(function (window) { with (window) {
   expect( 22 );

@@ -1,3 +1,139 @@
+## 0.8.4
+
+ * Add: Typed array constructors on the `window`. (nlacasse)
+ * Fix: `querySelector` and `querySelectorAll` should be on the prototypes of `Element` and `Document`, not own-properties. (mbostock)
+
+## 0.8.3
+
+ * Fix: When auto-detecting whether the first parameter to `jsdom.env` is a HTML string or a filename, deal with long strings correctly instead of erroring. (baryshev)
+
+## 0.8.2
+
+ * Add: basic `window.history` support, including `back`, `forward`, `go`, `pushState`, and `replaceState`. (ralphholzmann)
+ * Add: If an `<?xml?>` declaration starts the document, will try to parse as XML, e.g. not lowercasing the tags. (robdodson)
+ * Fix: tag names passed to `createElement` are coerced to strings before evaluating.
+
+## 0.8.1 (hotfix)
+
+ * Fix: a casing issue that prevented jsdom from loading on Unix and Solaris systems. (dai-shi)
+ * Fix: `window.location.replace` was broken. (dai-shi)
+ * Fix: update minimum htmlparser2 version, to ensure you get the latest parsing-related bugfixes.
+
+## 0.8.0
+
+ * Add: working `XMLHttpRequest` support, including cookie passing! (dai-shi)
+ * Add: there is now a `window.navigator.noUI` property that evaluates to true, if you want to specifically distinguish jsdom in your tests.
+
+## 0.7.0
+
+ * Change: the logic when passing `jsdom.env` a string is more accurate, and you can be explicit by using the `html`, `url`, or `file` properties. This is a breaking change in the behavior of `html`, which used to do the same auto-detection logic as the string-only version.
+ * Fix: errors raised in scripts are now passed to `jsdom.env`'s callback. (airportyh)
+ * Fix: set `window.location.href` correctly when using `jsdom.env` to construct a window from a URL, when that URL causes a redirect. (fegs)
+ * Add: a more complete and accurate `window.location` object, which includes firing `hashchange` events when the hash is changed. (dai-shi)
+ * Add: when using a non-implemented feature, mention exactly what it was that is not implemented in the error message. (papandreou)
+
+## 0.6.5
+
+ * Fix: custom attributes whose names were the same as properties of `Object.prototype`, e.g. `"constructor"`, would confuse jsdom massively.
+
+## 0.6.4
+
+ * Fix: CSS selectors which contain commas inside quotes are no longer misinterpreted. (chad3814)
+ * Add: `<img>` elements now fire `"load"` events when their `src` attributes are changed. (kapouer)
+
+## 0.6.3
+
+ * Fix: better automatic detection of URLs vs. HTML fragments when using `jsdom.env`. (jden)
+
+## 0.6.2
+
+ * Fix: URL resolution to be amazing and extremely browser-compatible, including the interplay between the document's original URL, any `<base>` tags that were set, and any relative `href`s. This impacts many parts of jsdom having to do with external resources or accurate `href` and `src` attributes. (deitch)
+ * Add: access to frames and iframes via named properties. (adrianlang)
+ * Fix: node-canvas integration, which had been broken since 0.5.7.
+
+## 0.6.1
+
+ * Make the code parseable with Esprima. (squarooticus)
+ * Use the correct `package.json` field `"repository"` instead of `"repositories"` to prevent npm warnings. (jonathanong)
+
+## 0.6.0
+
+Integrated a new HTML parser, [htmlparser2](https://npmjs.org/package/htmlparser2), from fb55. This is an actively maintained and much less buggy parser, fixing many of our parsing issues, including:
+
+ * Parsing elements with optional closing tags, like `<p>` or `<td>`.
+ * The `innerHTML` of `<script>` tags no longer cuts off the first character.
+ * Empty attributes now have `""` as their value instead of the attribute name.
+ * Multiline attributes no longer get horribly mangled.
+ * Attribute names can now be any value allowed by HTML5, including crazy things like `^`.
+ * Attribute values can now contain any value allowed by HTML5, including e.g. `>` and `<`.
+
+## 0.5.7
+
+ * Fix: make event handlers attached via `on<event>` more spec-compatible, supporting `return false` and passing the `event` argument. (adrianlang)
+ * Fix: make the getter for `textContent` more accurate, e.g. in cases involving comment nodes or processing instruction nodes. (adrianlang)
+ * Fix: make `<canvas>` behave like a `<div>` when the `node-canvas` package isn't available, instead of crashing. (stepheneb)
+
+## 0.5.6
+
+ * Fix: `on<event>` properties are correctly updated when using `setAttributeNode`, `attributeNode.value =`, `removeAttribute`, and `removeAttributeNode`; before it only worked with `setAttribute`. (adrianlang)
+ * Fix: `HTMLCollection`s now have named properties based on their members' `id` and `name` attributes, e.g. `form.elements.inputId` is now present. (adrianlang)
+
+## 0.5.5
+
+ * Fix: `readOnly` and `selected` properties were not correct when their attribute values were falsy, e.g. `<option selected="">`. (adrianlang)
+
+## 0.5.4
+
+This release, and all future releases, require at least Node.js 0.8.
+
+ * Add: parser can now be set via `jsdom.env` configuration. (xavi-)
+ * Fix: accessing `rowIndex` for table rows that are not part of a table would throw. (medikoo)
+ * Fix: several places in the code accidentally created global variables, or referenced nonexistant values. (xavi-)
+ * Fix: `<img>` elements' `src` properties now evaluate relative to `location.href`, just like `<a>` elements' `href` properties. (brianmaissy)
+
+## 0.5.3
+
+This release is compatible with Node.js 0.6, whereas all future releases will require at least Node.js 0.8.
+
+ * Fix: `getAttributeNS` now returns `null` for attributes that are not present, just like `getAttribute`. (mbostock)
+ * Change: `"request"` dependency pinned to version 2.14 for Node.js 0.6 compatibility.
+
+## 0.5.2
+
+ * Fix: stylesheets with `@-webkit-keyframes` rules were crashing calls to `getComputedStyle`.
+ * Fix: handling of `features` option to `jsdom.env`.
+ * Change: retain the value of the `style` attribute until the element's `style` property is touched. (papandreou)
+
+## 0.5.1
+
+ * Fix: `selectedIndex` now changes correctly in response to `<option>` elements being selected. This makes `<select>` elements actually work like you would want, especially with jQuery. (xcoderzach)
+ * Fix: `checked` works correctly on radio buttons, i.e. only one can be checked and clicking on one does not uncheck it. Previously they worked just like checkboxes. (xcoderzach)
+ * Fix: `click()` on `<input>` elements now fires a click event. (xcoderzach)
+
+## 0.5.0
+
+ * Fix: Make `contextify` a non-optional dependency. jsdom never worked without it, really, so this just caused confusion.
+
+## 0.4.2
+
+ * Fix: `selected` now returns true for the first `<option>` in a `<select>` if nothing is explicitly set.
+ * Fix: tweaks to accuracy and speed of the `querySelectorAll` implementation.
+
+## 0.4.1 (hotfix)
+
+ * Fix: crashes when loading HTML files with `<a>` tags with no `href` attribute. (eleith)
+
+## 0.4.0
+
+ * Fix: `getAttribute` now returns `null` for attributes that are not present, as per DOM4 (but in contradiction to DOM1 through DOM3).
+ * Fix: static `NodeList`-returning methods (such as `querySelectorAll`) now return a real `NodeList` instance.
+ * Change: `NodeList`s no longer expose nonstandard properties to the world, like `toArray`, without first prefixing them with an underscore.
+ * Change: `NodeList`s no longer inconsistently have array methods. Previously, live node lists would have `indexOf`, while static node lists would have them all. Now, they have no array methods at all, as is correct per the specification.
+
+## 0.3.4
+
+ * Fix: stylesheets with `@media` rules were crashing calls to `getComputedStyle`, e.g. those in jQuery's initialization.
+
 ## 0.3.3
 
  * Fix: make `document.write` calls insert new elements correctly. (johanoverip, kblomquist).
